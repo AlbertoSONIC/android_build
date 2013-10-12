@@ -68,18 +68,13 @@ endif
 
 TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 ifeq ($(USE_MORE_OPT_FLAGS),yes)
-    TARGET_arm_CFLAGS :=    -Os \
-                            -fno-tree-vectorize \
-                            -fno-inline-functions \
-                            -fgcse-after-reload \
-                            -fipa-cp-clone \
-                            -fpredictive-commoning \
-                            -fsched-spec-load \
-                            -fvect-cost-model \
+    TARGET_arm_CFLAGS :=    -O3 \
                             -fomit-frame-pointer \
                             -fstrict-aliasing \
                             -Wstrict-aliasing=3 \
-                            -funswitch-loops
+                            -Werror=strict-aliasing \
+                            -funswitch-loops \
+                            -fno-tree-vectorize
 else
     TARGET_arm_CFLAGS :=    -O2 \
                             -fgcse-after-reload \
@@ -101,19 +96,11 @@ endif
 ifeq ($(ARCH_ARM_HAVE_THUMB_SUPPORT),true)
     ifeq ($(USE_MORE_OPT_FLAGS),yes)
         TARGET_thumb_CFLAGS :=  -mthumb \
-                                -Os \
-                                -fno-tree-vectorize \
-                                -fno-inline-functions \
-                                -fno-unswitch-loops \
-                                -fgcse-after-reload \
-                                -fipa-cp-clone \
-                                -fpredictive-commoning \
-                                -fsched-spec-load \
-                                -funswitch-loops \
-                                -fvect-cost-model \
+                                -O3 \
                                 -fomit-frame-pointer \
                                 -fstrict-aliasing \
-                                -Wstrict-aliasing=3
+                                -Wstrict-aliasing=3 \
+                                -Werror=strict-aliasing
     else
         TARGET_thumb_CFLAGS :=  -mthumb \
                                 -Os \
@@ -205,7 +192,7 @@ TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden $(call cc-option,-std=gnu+
 
 # More flags/options can be added here
 ifndef TARGET_EXTRA_CFLAGS
-  TARGET_RELEASE_CFLAGS := \
+  TARGET_RELEASE_CFLAGS += \
         -DNDEBUG \
         -g \
         -Wstrict-aliasing=3 \
